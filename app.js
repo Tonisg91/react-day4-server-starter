@@ -8,6 +8,7 @@ const hbs          = require('hbs');
 const mongoose     = require('mongoose');
 const logger       = require('morgan');
 const path         = require('path');
+const cors = require('cors');
 
 
 // WHEN INTRODUCING USERS DO THIS:
@@ -40,6 +41,13 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(
+  cors({
+    credentials: true,
+    origin: ['http://localhost:3001'] // <== permitir llamadas de este origen
+  })
+);
+
 
 // Express View engine setup
 
@@ -72,7 +80,11 @@ app.locals.title = 'Express - Generated with IronGenerator';
 // ROUTES MIDDLEWARE STARTS HERE:
 
 const index = require('./routes/index');
+const projectsRoutes = require('./routes/project-routes');
+const tasksRoutes = require('./routes/task-routes');
 app.use('/', index);
+app.use('/api', projectsRoutes, tasksRoutes);
+
 
 
 module.exports = app;
